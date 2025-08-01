@@ -1,0 +1,24 @@
+.app {
+    .sidebar {
+      width: 240px;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #f9a8d4, #e09ec0);
+      padding: 1rem;
+      color: white;
+      .nav-item {
+        margin: 1rem 0;
+        font-size: 1.1rem;
+      }
+    }
+  
+    .dashboard {
+      flex: 1;
+      padding: 2rem;
+    }
+  
+    .card {
+      border: none;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  }
+  

@@ -1,0 +1,10 @@
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    position: relative;
+  }
+
+  .dashboard {
+    margin-left: 0;
+  }
+}

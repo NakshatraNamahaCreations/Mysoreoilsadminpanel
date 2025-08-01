@@ -1,0 +1,42 @@
+/* Sidebar.css */
+.sidebar {
+    background: linear-gradient(135deg, #89978c, #002209); /* Linear gradient background */
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    cursor: pointer;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .sidebar-link:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Subtle hover effect */
+  }
+  
+  .sidebar-icon {
+    font-size: 1.2rem;
+    margin-right: 10px;
+  }
+  
+  .sidebar-link.active {
+    background-color: #593E3E; /* Background color for the active route */
+    /* color: #ffffff; */
+  }
+  
+  .sidebar-text {
+    font-size: 1rem;
+  }
+  

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Pagination } from "react-bootstrap";
-import { FaArrowLeft, FaTrash } from 'react-icons/fa';
+import { FaTrash } from 'react-icons/fa';
 
 function Customer() {
   const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; 
+  const itemsPerPage = 5;
 
   // Fetch customers from API
   const fetchCustomers = async () => {
@@ -16,14 +15,18 @@ function Customer() {
       if (!response.ok) throw new Error('Failed to fetch customers');
       
       const data = await response.json();
-      if (Array.isArray(data)) setCustomers(data);
-      else throw new Error('Invalid data format');
+      if (Array.isArray(data)) {
+        // Sort by createdAt descending (latest first)
+        const sorted = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setCustomers(sorted);
+      } else {
+        throw new Error('Invalid data format');
+      }
     } catch (error) {
       console.error('Error fetching customers:', error);
     }
   };
 
-  // Fetch customers on component mount
   useEffect(() => {
     fetchCustomers();
   }, []);
@@ -32,7 +35,8 @@ function Customer() {
   const filteredCustomers = customers.filter((customer) =>
     (customer.firstname && customer.firstname.toLowerCase().includes(searchTerm.toLowerCase())) ||
     (customer.lastname && customer.lastname.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (customer.email && customer.email.toLowerCase().includes(searchTerm.toLowerCase()))
+    (customer.email && customer.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (customer.mobilenumber && customer.mobilenumber.includes(searchTerm))
   );
 
   // Pagination calculation
@@ -41,7 +45,7 @@ function Customer() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentCustomers = filteredCustomers.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Delete Customer Function
+  // Delete Customer
   const handleDelete = async (id) => {
     try {
       const response = await fetch(`https://api.themysoreoils.com/api/customers/delete/${id}`, {
@@ -59,7 +63,7 @@ function Customer() {
   };
 
   return (
-    <div className="container" style={{ marginTop: '1%', }}>
+    <div className="container" style={{ marginTop: '1%' }}>
       <div>
         {/* Search Bar */}
         <input
@@ -71,13 +75,14 @@ function Customer() {
         />
 
         {/* Customers Table */}
-        <table className="table table-bordered" style={{width:'90%'}}>
-          <thead style={{textAlign:'center'}}>
+        <table className="table table-bordered" style={{ width: '90%' }}>
+          <thead style={{ textAlign: 'center' }}>
             <tr>
               <th>Sl No</th>
               <th>First Name</th>
               <th>Last Name</th>
               <th>Email</th>
+              <th>Phone Number</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -88,6 +93,7 @@ function Customer() {
                 <td>{customer.firstname}</td>
                 <td>{customer.lastname}</td>
                 <td>{customer.email}</td>
+                <td>{customer.mobilenumber}</td>
                 <td>
                   <FaTrash
                     onClick={() => handleDelete(customer._id)}

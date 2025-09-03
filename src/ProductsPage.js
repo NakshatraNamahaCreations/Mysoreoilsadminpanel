@@ -27,6 +27,7 @@ const ProductsPage = ({ existingProductData }) => {
     unit: "",
     quantity: "",
     variantPrice: "",
+      variantDiscountPrice: "",
   });
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -55,8 +56,9 @@ const ProductsPage = ({ existingProductData }) => {
   };
 
   const handleAddVariant = () => {
-    const { quantity, variantPrice, unit } = newProduct;
+    const { quantity, variantPrice, variantDiscountPrice, unit } = newProduct;
     const price = parseFloat(variantPrice);
+    const discountPrice = parseFloat(variantDiscountPrice) || 0;
 
     if (!quantity.trim() || isNaN(price) || price <= 0 || !unit) {
       alert("Please provide a valid quantity, price, and unit.");
@@ -65,9 +67,10 @@ const ProductsPage = ({ existingProductData }) => {
 
     setNewProduct({
       ...newProduct,
-      variants: [...newProduct.variants, { quantity, price, unit }],
+      variants: [...newProduct.variants, { quantity, price, discountPrice, unit }],
       quantity: "",
       variantPrice: "",
+        variantDiscountPrice: "",
       unit: "",
     });
   };
@@ -83,6 +86,7 @@ const ProductsPage = ({ existingProductData }) => {
       ...newProduct,
       quantity: variant.quantity,
       variantPrice: variant.price,
+         variantDiscountPrice: variant.discountPrice || "",
       unit: variant.unit || "",
     });
     setEditingVariantIndex(index);
@@ -91,8 +95,9 @@ const ProductsPage = ({ existingProductData }) => {
   const handleUpdateVariant = () => {
     if (editingVariantIndex === null) return;
 
-    const { quantity, variantPrice, unit } = newProduct;
+    const { quantity, variantPrice,variantDiscountPrice, unit } = newProduct;
     const price = parseFloat(variantPrice);
+      const discountPrice = parseFloat(variantDiscountPrice) || 0;
 
     if (!quantity.trim() || isNaN(price) || price <= 0 || !unit) {
       alert("Please provide a valid quantity, price, and unit.");
@@ -100,13 +105,14 @@ const ProductsPage = ({ existingProductData }) => {
     }
 
     const updatedVariants = [...newProduct.variants];
-    updatedVariants[editingVariantIndex] = { quantity, price, unit };
+    updatedVariants[editingVariantIndex] = { quantity, price,discountPrice, unit };
 
     setNewProduct({
       ...newProduct,
       variants: updatedVariants,
       quantity: "",
       variantPrice: "",
+       variantDiscountPrice: "",
       unit: "",
     });
     setEditingVariantIndex(null);
@@ -649,15 +655,7 @@ const ProductsPage = ({ existingProductData }) => {
                   }
                   style={inputStyle}
                 />
-                <input
-                  type="number"
-                  placeholder="Discount Price"
-                  value={newProduct.discountPrice || ""}
-                  onChange={(e) =>
-                    setNewProduct({ ...newProduct, discountPrice: e.target.value })
-                  }
-                  style={inputStyle}
-                />
+              
                 <textarea
                   rows={3}
                   placeholder="Description"
@@ -710,6 +708,16 @@ const ProductsPage = ({ existingProductData }) => {
                   }
                   style={{ ...inputStyle, flex: "1 1 120px" }}
                 />
+                <input
+  type="number"
+  placeholder="Discount Price"
+  value={newProduct.variantDiscountPrice || ""}
+  onChange={(e) =>
+    setNewProduct({ ...newProduct, variantDiscountPrice: e.target.value })
+  }
+  style={{ ...inputStyle, flex: "1 1 120px" }}
+/>
+
                 <button
                   onClick={
                     editingVariantIndex !== null
